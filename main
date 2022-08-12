@@ -1,0 +1,246 @@
+int centerRightVal;
+int centerLeftVal;
+int rightVal;
+int leftVal;
+
+float err;
+float kor;
+float lm;
+float rm;
+int v;
+
+float odezva;
+float vzdalenost;
+
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  
+  //right wheel
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+
+  //left wheel
+  pinMode(10, OUTPUT);
+  pinMode(9, OUTPUT);
+
+  // btn
+  pinMode(2, INPUT);
+
+
+  // distance
+  pinMode(2, OUTPUT);
+  pinMode(3, INPUT);
+
+  
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+   // distance
+    digitalWrite(2, LOW);
+    delayMicroseconds(2);
+    digitalWrite(2, HIGH);
+    delayMicroseconds(5);
+    digitalWrite(2, LOW);
+  
+    odezva = pulseIn(3, HIGH);
+  
+    vzdalenost = odezva / 58.31;
+  
+    Serial.println(vzdalenost);
+
+    
+  
+  while (vzdalenost > 20) {
+    Serial.print('while');
+    
+    centerRightVal = analogRead(A1);
+    centerLeftVal = analogRead(A0);
+    rightVal = analogRead(A3);
+    leftVal = analogRead(A2);
+    
+    v = 150;
+  
+    Serial.println(leftVal);
+  
+    err = centerRightVal - centerLeftVal;
+    kor = err * 1.2;
+  
+    //Serial.println(err);
+      
+    // distance
+    digitalWrite(2, LOW);
+    delayMicroseconds(2);
+    digitalWrite(2, HIGH);
+    delayMicroseconds(5);
+    digitalWrite(2, LOW);
+  
+    odezva = pulseIn(3, HIGH);
+  
+    vzdalenost = odezva / 58.31;
+  
+    Serial.println(vzdalenost);
+  
+  
+    if ((leftVal > 200) && (centerLeftVal < 200)) {  // if left is black and center left is white
+      digitalWrite(10, LOW);
+      
+      while (analogRead(A0) < 200) {  // while center right isn't black
+        analogWrite(6, 150); // right motor
+        Serial.println(1);
+        Serial.println(leftVal);
+      }
+  
+      digitalWrite(6, LOW);
+    }
+  
+  
+    else if ((rightVal > 200) && (centerRightVal < 200)) {  // if right is black and center right is white
+      digitalWrite(6, LOW);
+      
+      while (analogRead(A1) < 200) {  // while center left isn't black
+        analogWrite(10, 150); // left motor
+        Serial.println(200);
+        Serial.println(rightVal);
+      }
+  
+      digitalWrite(10, LOW);
+    }
+  
+  
+    else {
+      analogWrite(10, v + kor);
+      analogWrite(6, v - kor);
+      Serial.println(3);
+    }
+  }
+
+  // stop
+  digitalWrite(10, LOW);
+  digitalWrite(6, LOW);
+}
+
+  /*
+  while (digitalRead(2) != HIGH && pushed != true) {
+    pushed = false;
+    Serial.println('p');
+  }
+  
+
+  if (digitalRead(2) == HIGH && pushed == false) {
+    Serial.println('g');
+    pushed = true;
+    delay(2500);
+  }
+
+  else if (digitalRead(2) == HIGH && pushed == true) {
+    Serial.println('s');
+    pushed = false;
+    delay(2500);
+  }
+
+  /*
+  else {
+    Serial.println('e');
+    pushed = false;  
+  }
+  
+  
+
+  Serial.println(pushed);
+
+
+  //if (pushed == true) {
+  Serial.println('p');
+  while (analogRead(A0) < 500) {
+    Serial.println('1');
+          
+    digitalWrite(5, LOW);
+    digitalWrite(6, LOW);
+      
+    digitalWrite(9, LOW);
+    analogWrite(10, 200);
+   }
+  
+
+  while (analogRead(A1) < 500){
+    Serial.println('2');
+  
+    digitalWrite(9, LOW);
+    digitalWrite(10, LOW);
+      
+    digitalWrite(5, LOW);
+    analogWrite(6, 200);
+   }
+  //}
+
+/* 
+  else {
+    Serial.println('n'); 
+
+    digitalWrite(9, LOW);
+    digitalWrite(10, LOW);
+      
+    digitalWrite(5, LOW);
+    digitalWrite(6, LOW);
+  }
+
+  /*
+  else {
+    Serial.println('3');
+    digitalWrite(5, LOW);
+    analogWrite(6, 150);
+
+    digitalWrite(9, LOW);
+    analogWrite(10, 150);
+  }
+  */
+
+
+  // forward
+  /*
+  digitalWrite(5, LOW);
+  analogWrite(6, 100);
+
+  digitalWrite(9, LOW);
+  analogWrite(10, 105);
+
+  delay(1000);
+  
+  digitalWrite(5, LOW);
+  digitalWrite(6, HIGH);
+
+  digitalWrite(9, LOW);
+  digitalWrite(10, HIGH);
+
+  delay(2000);
+
+
+  // stop
+  digitalWrite(6, LOW);
+  digitalWrite(10, LOW);
+
+  delay(1000);
+
+
+  
+  //back
+  digitalWrite(6, LOW);
+  digitalWrite(5, HIGH);
+
+  digitalWrite(10, LOW);
+  digitalWrite(9, HIGH);
+
+  delay(3000);
+
+
+
+  // stop
+  digitalWrite(5, LOW);
+  digitalWrite(9, LOW);
+
+  delay(1000);
+  */
